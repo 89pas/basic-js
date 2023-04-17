@@ -1,52 +1,28 @@
 const { NotImplementedError } = require('../extensions/index.js');
 
 /**
- * Create transformed array based on the control sequences that original
- * array contains
+ * Given a number, replace this number with
+ * the sum of its digits until we get to a one digit number.
  *
- * @param {Array} arr initial array
- * @returns {Array} transformed array
+ * @param {Number} n
+ * @return {Number}
  *
  * @example
- *
- * transform([1, 2, 3, '--double-next', 4, 5]) => [1, 2, 3, 4, 4, 5]
- * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
+ * For 100, the result should be 1 (1 + 0 + 0 = 1)
+ * For 91, the result should be 1 (9 + 1 = 10, 1 + 0 = 1)
  *
  */
-function transform(arr) {
-	if (!Array.isArray(arr)) {
-		throw new Error (`'arr' parameter must be an instance of the Array!`);
-	}
-	let newArr = [];
-	for (let i = 0; i < arr.length; i++) {
-		if (arr[i] === '--discard-next') {
-			i++;
-		} else if (arr[i] === '--discard-prev') {
-			if (arr[i - 2] === '--discard-next') {
-				continue;
-			}
-			if (arr[i - 1]) {
-				newArr.pop();
-			}
-		} else if (arr[i] === '--double-next') {
-			if (arr[i + 1]) {
-				newArr.push(arr[i + 1]);
-			}
-		} else if (arr[i] === '--double-prev') {
-			if (arr[i - 2] === '--discard-next') {
-				continue;
-			}
-			if (arr[i - 1]) {
-				newArr.push(arr[i - 1]);
-			}
-		} else {
-			newArr.push(arr[i]);
-		}
-	}
-
-	return newArr;
+function getSumOfDigits(n) {
+  let arr = String(n)
+    .split("")
+    .map((el) => +el);
+  let result = arr.reduce((acc, curr) => acc + curr, 0);
+  if (result >= 10) {
+    return getSumOfDigits(result);
+  }
+  return result;
 }
 
 module.exports = {
-  transform
+  getSumOfDigits
 };
